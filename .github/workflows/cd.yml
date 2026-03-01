@@ -1,0 +1,46 @@
+name: CD - Deploy
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+      - 'release/**'
+
+jobs:
+
+  deploy-dv:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment: DV
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate DV Deploy
+        run: echo "Deploying to DV..."
+
+  deploy-ho:
+    if: startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    environment: HO
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate HO Deploy
+        run: echo "Deploying to HO..."
+
+  deploy-pr:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: PR
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Simulate PR Deploy
+        run: echo "Deploying to PR..."
