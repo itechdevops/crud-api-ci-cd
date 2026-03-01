@@ -7,18 +7,16 @@ on:
       - main
 
 jobs:
-
   deploy-dv:
     name: Deploy DV
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     environment: DV
-
     steps:
       - name: Trigger Render Deploy (DV)
         run: |
           curl -X POST \
-            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Accept: application/json"
 
@@ -27,11 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: PR
-
     steps:
       - name: Trigger Render Deploy (PR)
         run: |
           curl -X POST \
-            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+            "https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys" \
             -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
             -H "Accept: application/json"
