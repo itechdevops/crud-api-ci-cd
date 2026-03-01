@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: crud-api-ci-cd
+  profiles:
+    active: dev
+
+server:
+  port: 8080
+
+springdoc:
+  swagger-ui:
+    path: /swagger
+  api-docs:
+    path: /v3/api-docs
