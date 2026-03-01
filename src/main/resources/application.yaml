@@ -1,24 +1,37 @@
-spring:
-  application:
-    name: crud-api-ci-cd
-  profiles:
-    active: dev
+name: CD - Deploy
 
-server:
-  port: ${PORT:8080}
+on:
+  push:
+    branches:
+      - develop
+      - main
 
-springdoc:
-  swagger-ui:
-    path: /swagger
-  api-docs:
-    path: /v3/api-docs
+jobs:
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-  endpoint:
-    health:
-      probes:
-        enabled: true
+  deploy-dv:
+    name: Deploy DV
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
+    environment: DV
+
+    steps:
+      - name: Trigger Render Deploy (DV)
+        run: |
+          curl -X POST \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Accept: application/json"
+
+  deploy-pr:
+    name: Deploy PR
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: PR
+
+    steps:
+      - name: Trigger Render Deploy (PR)
+        run: |
+          curl -X POST \
+            https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploys \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Accept: application/json"
